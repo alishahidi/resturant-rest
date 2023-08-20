@@ -1,11 +1,14 @@
 package com.neshan.resturantrest.services;
 
 import com.github.javafaker.Faker;
+import com.neshan.resturantrest.models.Food;
 import com.neshan.resturantrest.models.Restaurant;
 import com.neshan.resturantrest.models.User;
 import com.neshan.resturantrest.util.Utils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -15,7 +18,21 @@ public class RestaurantService {
 
     private final UserService userService;
 
-    private List<Restaurant> db = new ArrayList<>();
+    private List<Restaurant> db = new ArrayList<>() {{
+        Faker faker = new Faker();
+
+        for (int i = 0; i <= 5; i++) {
+            Restaurant restaurant = Restaurant
+                    .builder()
+                    .id(String.valueOf(i))
+                    .ownerId(String.valueOf(i))
+                    .name(faker.name().firstName())
+                    .address(faker.address().fullAddress())
+                    .build();
+
+            add(restaurant);
+        }
+    }};
 
     public List<Restaurant> get() {
         return db;
@@ -37,5 +54,11 @@ public class RestaurantService {
         db.add(restaurant);
 
         return restaurant;
+    }
+
+    public List<Restaurant> getRestaurantsByOwnerId(String ownerId) {
+        return db.stream()
+                .filter(restaurant -> restaurant.getOwnerId().equals(ownerId))
+                .toList();
     }
 }

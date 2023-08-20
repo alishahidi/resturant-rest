@@ -13,10 +13,9 @@ public class UserService {
         Faker faker = new Faker();
 
         for (int i = 0; i <= 5; i++) {
-            String id = UUID.randomUUID().toString();
             User user = User
                     .builder()
-                    .id(id)
+                    .id(String.valueOf(i))
                     .name(faker.name().fullName())
                     .username(faker.internet().emailAddress())
                     .build();
