@@ -1,9 +1,6 @@
 package com.neshan.resturantrest.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Map;
 
@@ -11,10 +8,11 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Restaurant {
     private String id;
     private String ownerId;
     private String name;
-    private Map<String, Food> foods;
+    private String address;
 
 }
