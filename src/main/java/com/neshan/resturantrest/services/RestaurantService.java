@@ -15,22 +15,19 @@ public class RestaurantService {
 
     private final UserService userService;
 
-    private List<Restaurant> db = new ArrayList<>() {{
-        Faker faker = new Faker();
+    private List<Restaurant> db = new ArrayList<>();
 
-        for (int i = 0; i <= 5; i++) {
-            User user = Utils.random(userService.get());
-            String id = UUID.randomUUID().toString();
-            Restaurant restaurant = Restaurant
-                    .builder()
-                    .id(id)
-                    .ownerId(user.getId())
-                    .name(faker.name().firstName())
-                    .address(faker.address().fullAddress())
-                    .build();
+    public List<Restaurant> get() {
+        return db;
+    }
 
+    public Restaurant add(Restaurant restaurant, String userId) {
+        User user = userService.get(userId);
+        String id = UUID.randomUUID().toString();
+        restaurant.setOwnerId(userId);
+        restaurant.setId(id);
+        db.add(restaurant);
 
-            add(restaurant);
-        }
-    }};
+        return restaurant;
+    }
 }

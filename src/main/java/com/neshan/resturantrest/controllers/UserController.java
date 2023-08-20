@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/get")
-    public Collection<User> get() {
+    public List<User> get() {
         return userService.get();
     }
 
