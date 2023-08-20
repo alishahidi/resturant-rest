@@ -5,17 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class History {
     private String id;
-    private String name;
-    private String username;
-    private Map<String, Restaurant> restaurants;
-    private Map<String, History> histories;
-
+    private Restaurant restaurant;
+    private Food food;
+    private Date createdAt;
 }
