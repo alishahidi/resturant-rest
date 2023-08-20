@@ -5,16 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Map;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Restaurant {
+public class Food {
     private String id;
-    private String ownerId;
     private String name;
-    private Map<String, Food> foods;
-
+    private Double price;
+    private Integer quantity;
 }
