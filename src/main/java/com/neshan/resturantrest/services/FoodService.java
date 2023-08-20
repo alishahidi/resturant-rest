@@ -36,6 +36,13 @@ public class FoodService {
         }
     }};
 
+    public Food get(String id) {
+        return db.stream()
+                .filter(food -> food.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
+    }
+
     public Food addFood(Food food, String userId) {
         String id = UUID.randomUUID().toString();
         Restaurant restaurant = restaurantService.get(food.getRestaurantId());
@@ -44,6 +51,28 @@ public class FoodService {
         }
         food.setId(id);
         db.add(food);
+
+        return food;
+    }
+
+    public Food updateFood(Food food) {
+        Food foundedFood = get(food.getId());
+
+        if (food.getPrice() != null) {
+            foundedFood.setPrice(food.getPrice());
+        }
+        if (food.getQuantity() != null) {
+            foundedFood.setQuantity(food.getQuantity());
+        }
+        if (food.getName() != null) {
+            foundedFood.setName(food.getName());
+        }
+
+        return foundedFood;
+    }
+
+    public Food deleteFood(Food food) {
+        db.remove(food);
 
         return food;
     }
