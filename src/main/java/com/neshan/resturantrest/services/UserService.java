@@ -1,13 +1,8 @@
 package com.neshan.resturantrest.services;
 
 import com.github.javafaker.Faker;
-import com.neshan.resturantrest.models.Food;
-import com.neshan.resturantrest.models.History;
-import com.neshan.resturantrest.models.Restaurant;
 import com.neshan.resturantrest.models.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -24,8 +19,6 @@ public class UserService {
                     .id(id)
                     .name(faker.name().fullName())
                     .username(faker.internet().emailAddress())
-                    .restaurants(new HashMap<>())
-                    .histories(new HashMap<>())
                     .build();
 
             add(user);
@@ -46,8 +39,6 @@ public class UserService {
     public User save(User user) {
         String id = UUID.randomUUID().toString();
         user.setId(id);
-        user.setRestaurants(new HashMap<>());
-        user.setHistories(new HashMap<>());
         db.add(user);
 
         return user;

@@ -21,6 +21,14 @@ public class RestaurantService {
         return db;
     }
 
+    public Restaurant get(String id) {
+        return db.stream()
+                .filter(restaurant -> restaurant.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
+    }
+
+
     public Restaurant add(Restaurant restaurant, String userId) {
         User user = userService.get(userId);
         String id = UUID.randomUUID().toString();

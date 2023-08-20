@@ -13,5 +13,6 @@ public class Food {
     private String id;
     private String name;
     private Double price;
-    private Integer quantity;
+    private String restaurantId;
+
 }
