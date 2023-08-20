@@ -73,13 +73,12 @@ public class RestaurantController {
         return ResponseEntity.ok(createdFood);
     }
 
-    @GetMapping("/{id}/serve/{foodId}")
-    public ResponseEntity<Food> serveFood(@PathVariable String id, @PathVariable String foodId) {
-        Food food = foodService.get(foodId);
-        if (!food.getRestaurantId().equals(id)) {
+    @GetMapping("/food/serve/{id}/{restaurantId}")
+    public ResponseEntity<Food> serveFood(@PathVariable String id, @PathVariable String restaurantId) {
+        Food food = foodService.get(id);
+        if (!food.getRestaurantId().equals(restaurantId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-
         if (food.getQuantity() <= 0) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "food quantity is zero");
         }
@@ -89,23 +88,24 @@ public class RestaurantController {
         return ResponseEntity.ok(foodService.updateFood(food));
     }
 
-    @PutMapping("/food/{id}/{restaurantId}")
-    public ResponseEntity<Food> updateFood(@RequestBody Food food, @PathVariable String id, @PathVariable String restaurantId) {
+    @PutMapping("/food/{id}/{restaurantId}/{userId}")
+    public ResponseEntity<Food> updateFood(@RequestBody Food food, @PathVariable String id, @PathVariable String restaurantId, @PathVariable String userId) {
         Food foundedFood = foodService.get(id);
-        if (!foundedFood.getRestaurantId().equals(restaurantId)) {
+        Restaurant restaurant = restaurantService.get(foundedFood.getRestaurantId());
+        if (!foundedFood.getRestaurantId().equals(restaurantId) || !restaurant.getOwnerId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-
         food.setId(id);
         food.setRestaurantId(restaurantId);
 
         return ResponseEntity.ok(foodService.updateFood(food));
     }
 
-    @DeleteMapping("/food/{id}/{restaurantId}")
-    public ResponseEntity<Food> deleteFood(@PathVariable String id, @PathVariable String restaurantId) {
+    @DeleteMapping("/food/{id}/{restaurantId}/{userId}")
+    public ResponseEntity<Food> deleteFood(@PathVariable String id, @PathVariable String restaurantId, @PathVariable String userId) {
         Food food = foodService.get(id);
-        if (!food.getRestaurantId().equals(restaurantId)) {
+        Restaurant restaurant = restaurantService.get(food.getRestaurantId());
+        if (!food.getRestaurantId().equals(restaurantId) || !restaurant.getOwnerId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
