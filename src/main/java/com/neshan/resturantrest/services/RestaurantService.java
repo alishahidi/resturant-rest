@@ -38,6 +38,12 @@ public class RestaurantService {
         return db;
     }
 
+    public Restaurant delete(Restaurant restaurant) {
+        db.remove(restaurant);
+
+        return restaurant;
+    }
+
     public Restaurant get(String id) {
         return db.stream()
                 .filter(restaurant -> restaurant.getId().equals(id))
