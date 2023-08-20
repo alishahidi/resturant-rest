@@ -6,10 +6,12 @@ import com.neshan.resturantrest.models.History;
 import com.neshan.resturantrest.models.Restaurant;
 import com.neshan.resturantrest.models.User;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
+@Service
 public class UserService {
     private Map<String, User> db = new HashMap<>() {{
         Faker faker = new Faker();
@@ -25,9 +27,13 @@ public class UserService {
                     .histories(new HashMap<>())
                     .build();
 
-            db.put(id, user);
+            put(id, user);
         }
     }};
+
+    public Collection<User> get() {
+        return db.values();
+    }
 
     public User get(String id) {
         return db.get(id);
@@ -43,18 +49,18 @@ public class UserService {
         return user;
     }
 
-    private Restaurant removeRestaurant(Restaurant restaurant, String userId) {
+    private Restaurant removeRestaurant(String restaurantId, String userId) {
         User foundedUser = db.get(userId);
         if (foundedUser == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        Restaurant foundedRestaurant = foundedUser.getRestaurants().get(restaurant.getId());
+        Restaurant foundedRestaurant = foundedUser.getRestaurants().get(restaurantId);
         if (foundedRestaurant == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        foundedUser.getRestaurants().remove(restaurant.getId());
+        foundedUser.getRestaurants().remove(restaurantId);
 
-        return restaurant;
+        return foundedRestaurant;
     }
 
     public Restaurant addRestaurant(Restaurant restaurant, String userId) {
@@ -69,7 +75,7 @@ public class UserService {
         return restaurant;
     }
 
-    public Food buyFood(Food food, String userId, String restaurantId) {
+    public Food buyFood(String foodId, String userId, String restaurantId) {
         User foundedUser = db.get(userId);
         if (foundedUser == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -78,14 +84,14 @@ public class UserService {
         if (foundedRestaurant == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        Food foundedFood = foundedRestaurant.getFoods().get(food.getId());
+        Food foundedFood = foundedRestaurant.getFoods().get(foodId);
         if (foundedFood == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         String id = UUID.randomUUID().toString();
         foundedUser.getHistories().put(id, new History(id, foundedRestaurant, foundedFood, new Date()));
 
-        return food;
+        return foundedFood;
     }
 
 }
