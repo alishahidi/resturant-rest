@@ -2,8 +2,11 @@ package com.neshan.resturantrest.controllers;
 
 import com.neshan.resturantrest.entities.GetRestaurantResponse;
 import com.neshan.resturantrest.models.Food;
+import com.neshan.resturantrest.models.History;
 import com.neshan.resturantrest.models.Restaurant;
+import com.neshan.resturantrest.models.User;
 import com.neshan.resturantrest.services.FoodService;
+import com.neshan.resturantrest.services.HistoryService;
 import com.neshan.resturantrest.services.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
     private final FoodService foodService;
+    private final HistoryService historyService;
 
     @GetMapping
     public List<Restaurant> get() {
@@ -73,9 +77,10 @@ public class RestaurantController {
         return ResponseEntity.ok(createdFood);
     }
 
-    @GetMapping("/food/serve/{id}/{restaurantId}")
-    public ResponseEntity<Food> serveFood(@PathVariable String id, @PathVariable String restaurantId) {
+    @GetMapping("/food/serve/{id}/{restaurantId}/{userId}")
+    public ResponseEntity<Food> serveFood(@PathVariable String id, @PathVariable String restaurantId, @PathVariable String userId) {
         Food food = foodService.get(id);
+
         if (!food.getRestaurantId().equals(restaurantId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
@@ -83,6 +88,9 @@ public class RestaurantController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "food quantity is zero");
         }
         food.setQuantity(food.getQuantity() - 1);
+        Restaurant restaurant = restaurantService.get(restaurantId);
+
+        History history = historyService.add(userId, food, restaurant);
 
 
         return ResponseEntity.ok(foodService.updateFood(food));
