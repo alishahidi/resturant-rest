@@ -1,8 +1,10 @@
 package com.neshan.resturantrest.controllers;
 
 import com.neshan.resturantrest.entities.GetUserResponse;
+import com.neshan.resturantrest.models.History;
 import com.neshan.resturantrest.models.Restaurant;
 import com.neshan.resturantrest.models.User;
+import com.neshan.resturantrest.services.HistoryService;
 import com.neshan.resturantrest.services.RestaurantService;
 import com.neshan.resturantrest.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class UserController {
 
     private final UserService userService;
     private final RestaurantService restaurantService;
+    private final HistoryService historyService;
 
     @GetMapping("/get")
     public List<User> get() {
@@ -34,11 +37,13 @@ public class UserController {
         }
 
         List<Restaurant> restaurants = restaurantService.getRestaurantsByOwnerId(id);
+        List<History> histories = historyService.getHistoryByUserId(id);
 
         return ResponseEntity.ok(
                 GetUserResponse.builder()
                         .user(user)
                         .restaurants(restaurants)
+                        .histories(histories)
                         .build()
         );
     }

@@ -1,5 +1,6 @@
 package com.neshan.resturantrest.entities;
 
+import com.neshan.resturantrest.models.History;
 import com.neshan.resturantrest.models.Restaurant;
 import com.neshan.resturantrest.models.User;
 import lombok.AllArgsConstructor;
@@ -16,5 +17,6 @@ import java.util.List;
 public class GetUserResponse {
     private User user;
     private List<Restaurant> restaurants;
+    private List<History> histories;
 
 }
