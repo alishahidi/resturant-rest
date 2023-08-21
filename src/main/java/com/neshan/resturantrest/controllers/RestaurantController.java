@@ -4,7 +4,6 @@ import com.neshan.resturantrest.entities.GetRestaurantResponse;
 import com.neshan.resturantrest.models.Food;
 import com.neshan.resturantrest.models.History;
 import com.neshan.resturantrest.models.Restaurant;
-import com.neshan.resturantrest.models.User;
 import com.neshan.resturantrest.services.FoodService;
 import com.neshan.resturantrest.services.HistoryService;
 import com.neshan.resturantrest.services.RestaurantService;
@@ -78,7 +77,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/food/serve/{id}/{restaurantId}/{userId}")
-    public ResponseEntity<Food> serveFood(@PathVariable String id, @PathVariable String restaurantId, @PathVariable String userId) {
+    public ResponseEntity<History> serveFood(@PathVariable String id, @PathVariable String restaurantId, @PathVariable String userId) {
         Food food = foodService.get(id);
 
         if (!food.getRestaurantId().equals(restaurantId)) {
@@ -91,9 +90,9 @@ public class RestaurantController {
         Restaurant restaurant = restaurantService.get(restaurantId);
 
         History history = historyService.add(userId, food, restaurant);
+        foodService.updateFood(food);
 
-
-        return ResponseEntity.ok(foodService.updateFood(food));
+        return ResponseEntity.ok(history);
     }
 
     @PutMapping("/food/{id}/{restaurantId}/{userId}")
