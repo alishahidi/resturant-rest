@@ -33,12 +33,12 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        List<Restaurant> ownedRestaurants = restaurantService.getRestaurantsByOwnerId(id);
+        List<Restaurant> restaurants = restaurantService.getRestaurantsByOwnerId(id);
 
         return ResponseEntity.ok(
                 GetUserResponse.builder()
                         .user(user)
-                        .ownedRestaurants(ownedRestaurants)
+                        .restaurants(restaurants)
                         .build()
         );
     }

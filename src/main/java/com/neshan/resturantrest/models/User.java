@@ -4,10 +4,7 @@ import lombok.*;
 
 import java.util.Map;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Builder
 public class User {
     private String id;

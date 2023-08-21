@@ -2,12 +2,8 @@ package com.neshan.resturantrest.models;
 
 import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Builder
-@EqualsAndHashCode
 public class Food {
     private String id;
     private String name;

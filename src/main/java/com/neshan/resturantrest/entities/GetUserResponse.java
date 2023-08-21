@@ -15,6 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 public class GetUserResponse {
     private User user;
-    private List<Restaurant> ownedRestaurants;
+    private List<Restaurant> restaurants;
 
 }
