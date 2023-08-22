@@ -20,7 +20,7 @@ public class ScheduledTasks {
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
 
-    @Scheduled(cron = "5 * * * *")
+    @Scheduled(cron = "5 * * * * ?")
     public void reportAverageTime() throws InterruptedException {
         List<Time> times = timeService.get();
 
