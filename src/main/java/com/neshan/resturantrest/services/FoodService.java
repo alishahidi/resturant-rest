@@ -43,12 +43,9 @@ public class FoodService {
                 .orElseThrow();
     }
 
-    public Food addFood(Food food, String userId) {
+    public Food addFood(Food food, String restaurantId) {
         String id = UUID.randomUUID().toString();
-        Restaurant restaurant = restaurantService.get(food.getRestaurantId());
-        if (!restaurant.getOwnerId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        food.setRestaurantId(restaurantId);
         food.setId(id);
         db.add(food);
 
