@@ -1,7 +1,9 @@
 package com.neshan.resturantrest.config;
 
 import com.neshan.resturantrest.services.UserService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,9 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ApplicationConfig {
 
-    private final UserService userService;
+    UserService userService;
 
     @Bean
     public UserDetailsService userDetailsService() {

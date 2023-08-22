@@ -1,25 +1,48 @@
 package com.neshan.resturantrest.services;
 
+import com.github.javafaker.Faker;
 import com.neshan.resturantrest.config.JwtService;
 import com.neshan.resturantrest.models.User;
 import com.neshan.resturantrest.requests.AuthenticationRequest;
 import com.neshan.resturantrest.requests.RegisterRequest;
 import com.neshan.resturantrest.entities.AuthenticationResponse;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
 
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+    UserService userService;
+    PasswordEncoder passwordEncoder;
+    JwtService jwtService;
+    AuthenticationManager authenticationManager;
+
+    private List<User> db = new ArrayList<>() {{
+        Faker faker = new Faker();
+
+        for (int i = 0; i <= 5; i++) {
+            User user = User
+                    .builder()
+                    .id(String.valueOf(i))
+                    .name(faker.name().fullName())
+                    .username(faker.internet().emailAddress())
+                    .build();
+
+            add(user);
+        }
+    }};
+
 
     public AuthenticationResponse register(RegisterRequest request) {
         User user = User
