@@ -4,7 +4,10 @@ import com.github.javafaker.Faker;
 import com.neshan.resturantrest.models.Restaurant;
 import com.neshan.resturantrest.models.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -12,7 +15,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RestaurantService {
 
-    private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     private List<Restaurant> db = new ArrayList<>() {{
         Faker faker = new Faker();
@@ -49,7 +52,8 @@ public class RestaurantService {
 
 
     public Restaurant add(Restaurant restaurant, String userId) {
-        User user = userService.get(userId);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         String id = UUID.randomUUID().toString();
         restaurant.setOwnerId(userId);
         restaurant.setId(id);
