@@ -43,49 +43,9 @@ public class UserService {
         return user;
     }
 
-//    private Restaurant removeRestaurant(String restaurantId, String userId) {
-//        User foundedUser = db.get(userId);
-//        if (foundedUser == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//        Restaurant foundedRestaurant = foundedUser.getRestaurants().get(restaurantId);
-//        if (foundedRestaurant == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//        foundedUser.getRestaurants().remove(restaurantId);
-//
-//        return foundedRestaurant;
-//    }
-//
-//    public Restaurant addRestaurant(Restaurant restaurant, String userId) {
-//        String id = UUID.randomUUID().toString();
-//        User foundedUser = db.get(userId);
-//        if (foundedUser == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//        restaurant.setId(id);
-//        foundedUser.getRestaurants().put(id, restaurant);
-//
-//        return restaurant;
-//    }
-//
-//    public Food buyFood(String foodId, String userId, String restaurantId) {
-//        User foundedUser = db.get(userId);
-//        if (foundedUser == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//        Restaurant foundedRestaurant = foundedUser.getRestaurants().get(restaurantId);
-//        if (foundedRestaurant == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//        Food foundedFood = foundedRestaurant.getFoods().get(foodId);
-//        if (foundedFood == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//        String id = UUID.randomUUID().toString();
-//        foundedUser.getHistories().put(id, new History(id, foundedRestaurant, foundedFood, new Date()));
-//
-//        return foundedFood;
-//    }
-
+    public Optional<User> findUserByUsername(String username) {
+        return db.stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
+    }
 }
