@@ -1,5 +1,6 @@
 package com.neshan.resturantrest.controllers;
 
+import com.neshan.resturantrest.config.TrackExecutionTime;
 import com.neshan.resturantrest.entities.GetRestaurantResponse;
 import com.neshan.resturantrest.models.Food;
 import com.neshan.resturantrest.models.History;
@@ -28,11 +29,14 @@ public class RestaurantController {
     private final HistoryService historyService;
 
     @GetMapping
-    public List<Restaurant> get() {
+    @TrackExecutionTime
+    public List<Restaurant> get() throws InterruptedException {
+        Thread.sleep(1000);
         return restaurantService.get();
     }
 
     @GetMapping("/{id}")
+    @TrackExecutionTime
     public ResponseEntity<GetRestaurantResponse> get(@PathVariable String id) {
         Restaurant restaurant = restaurantService.get(id);
         List<Food> menu = foodService.getFoodsByRestaurantId(id);
@@ -46,6 +50,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/create")
+    @TrackExecutionTime
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -55,6 +60,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
+    @TrackExecutionTime
     public ResponseEntity<GetRestaurantResponse> delete(@PathVariable String id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Restaurant restaurant = restaurantService.get(id);
@@ -74,6 +80,7 @@ public class RestaurantController {
 
 
     @PostMapping("/food/{restaurantId}")
+    @TrackExecutionTime
     public ResponseEntity<Food> addFood(@RequestBody Food food, @PathVariable String restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Restaurant restaurant = restaurantService.get(restaurantId);
@@ -86,6 +93,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/food/serve/{foodId}/{restaurantId}")
+    @TrackExecutionTime
     public ResponseEntity<History> serveFood(@PathVariable String foodId, @PathVariable String restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Food food = foodService.get(foodId);
@@ -106,6 +114,7 @@ public class RestaurantController {
     }
 
     @PutMapping("/food/{id}/{restaurantId}")
+    @TrackExecutionTime
     public ResponseEntity<Food> updateFood(@RequestBody Food food, @PathVariable String id, @PathVariable String restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Food foundedFood = foodService.get(id);
@@ -120,6 +129,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/food/{id}/{restaurantId}")
+    @TrackExecutionTime
     public ResponseEntity<Food> deleteFood(@PathVariable String id, @PathVariable String restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Food food = foodService.get(id);
