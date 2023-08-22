@@ -43,7 +43,7 @@ public class RestaurantController {
         );
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/create/{id}")
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant, @PathVariable String id) {
         Restaurant createdRestaurant = restaurantService.add(restaurant, id);
 
