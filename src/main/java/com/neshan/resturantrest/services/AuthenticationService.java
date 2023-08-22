@@ -28,22 +28,6 @@ public class AuthenticationService {
     JwtService jwtService;
     AuthenticationManager authenticationManager;
 
-    private List<User> db = new ArrayList<>() {{
-        Faker faker = new Faker();
-
-        for (int i = 0; i <= 5; i++) {
-            User user = User
-                    .builder()
-                    .id(String.valueOf(i))
-                    .name(faker.name().fullName())
-                    .username(faker.internet().emailAddress())
-                    .build();
-
-            add(user);
-        }
-    }};
-
-
     public AuthenticationResponse register(RegisterRequest request) {
         User user = User
                 .builder()
