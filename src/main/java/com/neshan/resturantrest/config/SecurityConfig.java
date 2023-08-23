@@ -35,12 +35,12 @@ public class SecurityConfig {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) -> {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
             Map<String, String> responseBody = new HashMap<>();
-            responseBody.put("error", "Unauthorized");
-            responseBody.put("message", "You are not authorized to access this resource.");
+            responseBody.put("error", "Forbidden");
+            responseBody.put("message", "We cant authentication you as valid user.");
             objectMapper.writeValue(response.getWriter(), responseBody);
         };
     }
