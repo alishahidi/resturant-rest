@@ -69,6 +69,7 @@ public class RestaurantController {
         }
         List<Food> menu = foodService.getFoodsByRestaurantId(id);
         menu.forEach(foodService::deleteFood);
+        restaurantService.delete(restaurant);
 
         return ResponseEntity.ok(
                 GetRestaurantResponse.builder()
