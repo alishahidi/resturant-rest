@@ -79,12 +79,12 @@ public class RestaurantController {
         );
     }
 
-
     @PostMapping("/food/{restaurantId}")
     @TrackExecutionTime
     public ResponseEntity<Food> addFood(@RequestBody Food food, @PathVariable String restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Restaurant restaurant = restaurantService.get(restaurantId);
+
         if (!restaurant.getOwnerId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }

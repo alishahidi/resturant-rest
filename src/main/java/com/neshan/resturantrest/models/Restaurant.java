@@ -4,7 +4,12 @@ import lombok.*;
 
 import java.util.Map;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
 @Builder
 public class Restaurant {
     private String id;

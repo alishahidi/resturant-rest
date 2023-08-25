@@ -52,8 +52,6 @@ public class RestaurantService {
 
 
     public Restaurant add(Restaurant restaurant, String userId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         String id = UUID.randomUUID().toString();
         restaurant.setOwnerId(userId);
         restaurant.setId(id);

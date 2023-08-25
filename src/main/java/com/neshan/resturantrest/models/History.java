@@ -1,12 +1,16 @@
 package com.neshan.resturantrest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
 @Builder
 public class History {
     private Food food;
