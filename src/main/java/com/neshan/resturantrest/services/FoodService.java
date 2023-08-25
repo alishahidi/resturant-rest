@@ -3,7 +3,9 @@ package com.neshan.resturantrest.services;
 import com.github.javafaker.Faker;
 import com.neshan.resturantrest.models.Food;
 import com.neshan.resturantrest.models.Restaurant;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,9 +17,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Setter
+@Getter
 public class FoodService {
-
-    private final RestaurantService restaurantService;
 
     private List<Food> db = new ArrayList<>() {{
         Faker faker = new Faker();

@@ -8,9 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Map;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
+@Setter
+@EqualsAndHashCode
 @Builder
 public class User implements UserDetails {
     private String id;
