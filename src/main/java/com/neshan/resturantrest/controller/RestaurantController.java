@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/restaurant")
@@ -29,65 +30,37 @@ public class RestaurantController {
 
     @GetMapping
     @TrackExecutionTime
-    public List<Restaurant> get() throws InterruptedException {
-        Thread.sleep(1000);
+    public List<Restaurant> get() {
         return restaurantService.get();
     }
 
     @GetMapping("/{id}")
     @TrackExecutionTime
-    public ResponseEntity<GetRestaurantResponse> get(@PathVariable String id) {
+    public ResponseEntity<Restaurant> get(@PathVariable Long id) {
         Restaurant restaurant = restaurantService.get(id);
-        List<Food> menu = foodService.getFoodsByRestaurantId(id);
 
-        return ResponseEntity.ok(
-                GetRestaurantResponse.builder()
-                        .restaurant(restaurant)
-                        .menu(menu)
-                        .build()
-        );
+        return ResponseEntity.ok(restaurant);
     }
 
     @PostMapping("/create")
     @TrackExecutionTime
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Restaurant createdRestaurant = restaurantService.add(restaurant, user.getId());
+        Restaurant createdRestaurant = restaurantService.add(restaurant);
 
         return ResponseEntity.ok(createdRestaurant);
     }
 
     @DeleteMapping("/{id}")
     @TrackExecutionTime
-    public ResponseEntity<GetRestaurantResponse> delete(@PathVariable String id) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<Restaurant> delete(@PathVariable Long id) {
+        Restaurant restaurant = restaurantService.delete(id);
 
-        Restaurant restaurant = restaurantService.get(id);
-        if (!restaurant.getOwnerId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        List<Food> menu = foodService.getFoodsByRestaurantId(id);
-        menu.forEach(foodService::deleteFood);
-        restaurantService.delete(restaurant);
-
-        return ResponseEntity.ok(
-                GetRestaurantResponse.builder()
-                        .restaurant(restaurant)
-                        .menu(menu)
-                        .build()
-        );
+        return ResponseEntity.ok(restaurant);
     }
 
     @PostMapping("/food/{restaurantId}")
     @TrackExecutionTime
-    public ResponseEntity<Food> addFood(@RequestBody Food food, @PathVariable String restaurantId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Restaurant restaurant = restaurantService.get(restaurantId);
-
-        if (!restaurant.getOwnerId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<Food> addFood(@RequestBody Food food, @PathVariable Long restaurantId) {
         Food createdFood = foodService.addFood(food, restaurantId);
 
         return ResponseEntity.ok(createdFood);
@@ -95,50 +68,25 @@ public class RestaurantController {
 
     @GetMapping("/food/serve/{foodId}/{restaurantId}")
     @TrackExecutionTime
-    public ResponseEntity<History> serveFood(@PathVariable String foodId, @PathVariable String restaurantId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Food food = foodService.get(foodId);
-        if (!food.getRestaurantId().equals(restaurantId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        if (food.getQuantity() <= 0) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "food quantity is zero");
-        }
-
-        food.setQuantity(food.getQuantity() - 1);
-        Restaurant restaurant = restaurantService.get(restaurantId);
-
-        History history = historyService.add(user.getId(), food, restaurant);
-        foodService.updateFood(food);
+    public ResponseEntity<History> serveFood(@PathVariable Long foodId, @PathVariable Long restaurantId) {
+        History history = restaurantService.serveFood(foodId, restaurantId);
 
         return ResponseEntity.ok(history);
     }
 
     @PutMapping("/food/{id}/{restaurantId}")
     @TrackExecutionTime
-    public ResponseEntity<Food> updateFood(@RequestBody Food food, @PathVariable String id, @PathVariable String restaurantId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Food foundedFood = foodService.get(id);
-        Restaurant restaurant = restaurantService.get(foundedFood.getRestaurantId());
-        if (!foundedFood.getRestaurantId().equals(restaurantId) || !restaurant.getOwnerId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-        food.setId(id);
-        food.setRestaurantId(restaurantId);
+    public ResponseEntity<Food> updateFood(@RequestBody Food food, @PathVariable Long id, @PathVariable Long restaurantId) {
+        Food createdFood = foodService.updateFood(food, id, restaurantId);
 
-        return ResponseEntity.ok(foodService.updateFood(food));
+        return ResponseEntity.ok(createdFood);
     }
 
     @DeleteMapping("/food/{id}/{restaurantId}")
     @TrackExecutionTime
-    public ResponseEntity<Food> deleteFood(@PathVariable String id, @PathVariable String restaurantId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Food food = foodService.get(id);
-        Restaurant restaurant = restaurantService.get(food.getRestaurantId());
-        if (!food.getRestaurantId().equals(restaurantId) || !restaurant.getOwnerId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<Food> deleteFood(@PathVariable Long id, @PathVariable Long restaurantId) {
+        Food deletedFood = foodService.deleteFood(id, restaurantId);
 
-        return ResponseEntity.ok(foodService.deleteFood(food));
+        return ResponseEntity.ok(deletedFood);
     }
 }

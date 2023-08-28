@@ -1,6 +1,6 @@
 package com.neshan.resturantrest.config;
 
-import com.neshan.resturantrest.service.UserService;
+import com.neshan.resturantrest.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,11 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ApplicationConfig {
 
-    UserService userService;
+    UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userService.findUserByUsername(username)
+        return username -> userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 
