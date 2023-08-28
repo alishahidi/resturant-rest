@@ -1,5 +1,6 @@
 package com.neshan.resturantrest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,34 +12,34 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
-@EqualsAndHashCode
 @Builder
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "restaurants")
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String id;
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
-            optional = false
-    )
+    Long id;
+
+    @ManyToOne
     @JoinColumn(
             name = "user_id",
             referencedColumnName = "id"
     )
+    @JsonIgnore
     User user;
+
     String name;
     String address;
+
     @OneToMany(
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
     )
     @JoinColumn(
-            name = "food_id",
+            name = "restaurant_id",
             referencedColumnName = "id"
     )
     List<Food> foods;
