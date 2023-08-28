@@ -1,10 +1,7 @@
 package com.neshan.resturantrest.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,25 +11,38 @@ import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
-@EqualsAndHashCode
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "histories")
 public class History {
-    Food food;
-    @JsonIgnore
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            optional = false
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "food_id",
+            referencedColumnName = "id"
     )
+    Food food;
+
+    @ManyToOne
     @JoinColumn(
             name = "user_id",
             referencedColumnName = "id"
     )
+    @JsonIgnore
     User user;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "restaurant_id",
+            referencedColumnName = "id"
+    )
     Restaurant restaurant;
 
     @CreationTimestamp
