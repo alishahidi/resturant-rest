@@ -63,6 +63,7 @@ public class RestaurantController {
     @TrackExecutionTime
     public ResponseEntity<GetRestaurantResponse> delete(@PathVariable String id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Restaurant restaurant = restaurantService.get(id);
         if (!restaurant.getOwnerId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);

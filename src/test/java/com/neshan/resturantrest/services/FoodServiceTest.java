@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 class FoodServiceTest {
@@ -29,6 +30,10 @@ class FoodServiceTest {
     @BeforeEach
     public void init() {
         MockitoAnnotations.openMocks(this);
+//        when(foodRepository.stream()).thenReturn(Stream.of(
+//                new Food("1", "Water", 100.0, "1", 5),
+//                new Food("2", "Milk", 100.0, "2", 2)
+//        ));
         List<Food> db = new ArrayList<>();
         db.add(new Food("1", "Water", 100.0, "1", 5));
         db.add(new Food("2", "Milk", 100.0, "2", 2));

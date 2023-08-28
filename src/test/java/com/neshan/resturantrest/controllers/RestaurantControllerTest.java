@@ -22,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -35,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 class RestaurantControllerTest {
 
@@ -52,16 +52,11 @@ class RestaurantControllerTest {
     @Mock
     private Authentication authentication;
 
-    @BeforeEach
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Autowired
     private MockMvc mockMvc;
 
     private final List<Restaurant> restaurants = List.of(
-            new Restaurant("1", "1", "Ali Restaurant", "Mashhad"),
+
             new Restaurant("2", "1", "Ali Restaurant 2", "Tehran")
     );
 
@@ -106,6 +101,7 @@ class RestaurantControllerTest {
     void createRestaurantTest() throws Exception {
         when(authentication.getPrincipal()).thenReturn(new User("4", "Ali Shahidi", "ali", "12345678"));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         Restaurant newRestaurant = Restaurant.builder()
                 .address("Mashhad")
                 .id("4")
