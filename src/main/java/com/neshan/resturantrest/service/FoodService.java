@@ -1,57 +1,68 @@
 package com.neshan.resturantrest.service;
 
-import com.github.javafaker.Faker;
 import com.neshan.resturantrest.model.Food;
+import com.neshan.resturantrest.model.Restaurant;
+import com.neshan.resturantrest.model.User;
+import com.neshan.resturantrest.repository.FoodRepository;
+import com.neshan.resturantrest.repository.HistoryRepository;
+import com.neshan.resturantrest.repository.RestaurantRepository;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Setter
 @Getter
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FoodService {
 
-    private List<Food> db = new ArrayList<>() {{
-        Faker faker = new Faker();
+    FoodRepository foodRepository;
+    RestaurantRepository restaurantRepository;
+    HistoryRepository historyRepository;
 
-        for (int i = 0; i <= 5; i++) {
-            Food food = Food
-                    .builder()
-                    .id(String.valueOf(i))
-                    .restaurantId(String.valueOf(i))
-                    .name(faker.food().dish())
-                    .price(faker.number().randomDouble(3, 10, 600))
-                    .quantity(faker.number().numberBetween(0, 30))
-                    .build();
+    public Food get(Long foodId) {
+        return foodRepository.findById(foodId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
+        );
+    }
 
-            add(food);
+    public Food addFood(Food food, Long restaurantId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant with id: " + restaurantId + " dont exist.")
+        );
+        System.out.println(restaurant.getUser());
+        if (!restaurant.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-    }};
+        food.setRestaurant(restaurant);
 
-    public Food get(String id) {
-        return db.stream()
-                .filter(food -> food.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+        Food createdFoot = foodRepository.save(food);
+
+        return createdFoot;
     }
 
-    public Food addFood(Food food, String restaurantId) {
-        String id = UUID.randomUUID().toString();
-        food.setRestaurantId(restaurantId);
-        food.setId(id);
-        db.add(food);
+    public Food updateFood(Food food, Long foodId, Long restaurantId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return food;
-    }
+        Food foundedFood = get(foodId);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant with id: " + restaurantId + " dont exist.")
+        );
 
-    public Food updateFood(Food food) {
-        Food foundedFood = get(food.getId());
+        if (!foundedFood.getRestaurant().getId().equals(restaurantId) || !restaurant.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         if (food.getPrice() != null) {
             foundedFood.setPrice(food.getPrice());
@@ -63,19 +74,28 @@ public class FoodService {
             foundedFood.setName(food.getName());
         }
 
+        foodRepository.save(foundedFood);
         return foundedFood;
     }
 
-    public Food deleteFood(Food food) {
-        db.remove(food);
+    public Food deleteFood(Long foodId, Long restaurantId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Food food = foodRepository.findById(foodId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
+        );
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant with id: " + restaurantId + " dont exist.")
+        );
+
+        if (!food.getRestaurant().getId().equals(restaurantId) || !restaurant.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        historyRepository.deleteHistoriesByFoodId(foodId);
+        foodRepository.deleteFoodById(foodId);
 
         return food;
     }
-
-    public List<Food> getFoodsByRestaurantId(String restaurantId) {
-        return db.stream()
-                .filter(food -> food.getRestaurantId().equals(restaurantId))
-                .toList();
-    }
-
 }

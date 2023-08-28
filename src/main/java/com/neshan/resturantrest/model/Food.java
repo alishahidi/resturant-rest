@@ -1,5 +1,6 @@
 package com.neshan.resturantrest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,27 +11,27 @@ import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
-@EqualsAndHashCode
 @Builder
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "foods")
 public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String id;
+    Long id;
     String name;
     Double price;
-    @ManyToOne(
-            cascade = CascadeType.ALL
-    )
+
+    @ManyToOne
     @JoinColumn(
             name = "restaurant_id",
             referencedColumnName = "id"
     )
+    @JsonIgnore
     Restaurant restaurant;
+
     Integer quantity;
 
     @CreationTimestamp
