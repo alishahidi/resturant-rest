@@ -10,6 +10,7 @@ import com.neshan.resturantrest.requests.RegisterRequest;
 import com.neshan.resturantrest.service.AuthenticationService;
 import com.neshan.resturantrest.service.HistoryService;
 import com.neshan.resturantrest.service.RestaurantService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,8 +27,6 @@ import java.util.List;
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
-    RestaurantService restaurantService;
-    HistoryService historyService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -44,18 +43,10 @@ public class AuthenticationController {
     }
 
     @GetMapping
-    public ResponseEntity<GetUserResponse> get() {
+    @Transactional
+    public ResponseEntity<User> get() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<Restaurant> restaurants = restaurantService.getRestaurantsByOwnerId(user.getId());
-        List<History> histories = historyService.getHistoryByUserId(user.getId());
-
-        return ResponseEntity.ok(
-                GetUserResponse.builder()
-                        .user(user)
-                        .restaurants(restaurants)
-                        .histories(histories)
-                        .build()
-        );
+        return ResponseEntity.ok(user);
     }
 }
