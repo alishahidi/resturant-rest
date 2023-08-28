@@ -41,7 +41,7 @@ public class SecurityConfig {
 
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("error", "Forbidden");
-            responseBody.put("message", "We cant authentication you as valid user.");
+            responseBody.put("message", authException.getMessage());
             objectMapper.writeValue(response.getWriter(), responseBody);
         };
     }
