@@ -1,4 +1,4 @@
-package com.neshan.resturantrest.models;
+package com.neshan.resturantrest.model;
 
 import lombok.*;
 

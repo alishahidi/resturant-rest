@@ -1,8 +1,8 @@
-package com.neshan.resturantrest.entities;
+package com.neshan.resturantrest.entity;
 
-import com.neshan.resturantrest.models.History;
-import com.neshan.resturantrest.models.Restaurant;
-import com.neshan.resturantrest.models.User;
+import com.neshan.resturantrest.model.History;
+import com.neshan.resturantrest.model.Restaurant;
+import com.neshan.resturantrest.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

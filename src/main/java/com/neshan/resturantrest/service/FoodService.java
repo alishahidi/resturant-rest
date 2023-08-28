@@ -1,16 +1,12 @@
-package com.neshan.resturantrest.services;
+package com.neshan.resturantrest.service;
 
 import com.github.javafaker.Faker;
-import com.neshan.resturantrest.models.Food;
-import com.neshan.resturantrest.models.Restaurant;
+import com.neshan.resturantrest.model.Food;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.AuthenticationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

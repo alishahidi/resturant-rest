@@ -1,6 +1,6 @@
 package com.neshan.resturantrest.config;
 
-import com.neshan.resturantrest.services.UserService;
+import com.neshan.resturantrest.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

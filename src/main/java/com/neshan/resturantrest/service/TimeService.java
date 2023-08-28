@@ -1,7 +1,6 @@
-package com.neshan.resturantrest.services;
+package com.neshan.resturantrest.service;
 
-import com.neshan.resturantrest.models.History;
-import com.neshan.resturantrest.models.Time;
+import com.neshan.resturantrest.model.Time;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

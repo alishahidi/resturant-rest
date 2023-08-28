@@ -1,13 +1,9 @@
-package com.neshan.resturantrest.services;
+package com.neshan.resturantrest.service;
 
 import com.github.javafaker.Faker;
-import com.neshan.resturantrest.models.Restaurant;
-import com.neshan.resturantrest.models.User;
+import com.neshan.resturantrest.model.Restaurant;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 

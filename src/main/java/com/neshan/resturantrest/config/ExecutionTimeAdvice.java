@@ -1,7 +1,7 @@
 package com.neshan.resturantrest.config;
 
-import com.neshan.resturantrest.models.Time;
-import com.neshan.resturantrest.services.TimeService;
+import com.neshan.resturantrest.model.Time;
+import com.neshan.resturantrest.service.TimeService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

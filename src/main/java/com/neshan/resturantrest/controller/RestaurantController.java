@@ -1,14 +1,14 @@
-package com.neshan.resturantrest.controllers;
+package com.neshan.resturantrest.controller;
 
 import com.neshan.resturantrest.config.TrackExecutionTime;
-import com.neshan.resturantrest.entities.GetRestaurantResponse;
-import com.neshan.resturantrest.models.Food;
-import com.neshan.resturantrest.models.History;
-import com.neshan.resturantrest.models.Restaurant;
-import com.neshan.resturantrest.models.User;
-import com.neshan.resturantrest.services.FoodService;
-import com.neshan.resturantrest.services.HistoryService;
-import com.neshan.resturantrest.services.RestaurantService;
+import com.neshan.resturantrest.entity.GetRestaurantResponse;
+import com.neshan.resturantrest.model.Food;
+import com.neshan.resturantrest.model.History;
+import com.neshan.resturantrest.model.Restaurant;
+import com.neshan.resturantrest.model.User;
+import com.neshan.resturantrest.service.FoodService;
+import com.neshan.resturantrest.service.HistoryService;
+import com.neshan.resturantrest.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 
 @RestController

@@ -1,9 +1,8 @@
-package com.neshan.resturantrest.services;
+package com.neshan.resturantrest.service;
 
-import com.neshan.resturantrest.models.Food;
-import com.neshan.resturantrest.models.History;
-import com.neshan.resturantrest.models.Restaurant;
-import com.neshan.resturantrest.models.User;
+import com.neshan.resturantrest.model.Food;
+import com.neshan.resturantrest.model.History;
+import com.neshan.resturantrest.model.Restaurant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

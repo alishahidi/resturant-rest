@@ -1,8 +1,7 @@
-package com.neshan.resturantrest.models;
+package com.neshan.resturantrest.model;
 
+import jakarta.persistence.Entity;
 import lombok.*;
-
-import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,6 +10,7 @@ import java.util.Map;
 @Setter
 @EqualsAndHashCode
 @Builder
+@Entity
 public class Restaurant {
     private String id;
     private String ownerId;

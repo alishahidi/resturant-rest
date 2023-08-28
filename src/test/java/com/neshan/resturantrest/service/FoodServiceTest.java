@@ -1,6 +1,6 @@
-package com.neshan.resturantrest.services;
+package com.neshan.resturantrest.service;
 
-import com.neshan.resturantrest.models.Food;
+import com.neshan.resturantrest.model.Food;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 class FoodServiceTest {

@@ -1,7 +1,7 @@
-package com.neshan.resturantrest.schedules;
+package com.neshan.resturantrest.schedule;
 
-import com.neshan.resturantrest.models.Time;
-import com.neshan.resturantrest.services.TimeService;
+import com.neshan.resturantrest.model.Time;
+import com.neshan.resturantrest.service.TimeService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

@@ -1,11 +1,9 @@
-package com.neshan.resturantrest.services;
+package com.neshan.resturantrest.service;
 
-import com.github.javafaker.Faker;
-import com.neshan.resturantrest.config.JwtService;
-import com.neshan.resturantrest.models.User;
+import com.neshan.resturantrest.model.User;
 import com.neshan.resturantrest.requests.AuthenticationRequest;
 import com.neshan.resturantrest.requests.RegisterRequest;
-import com.neshan.resturantrest.entities.AuthenticationResponse;
+import com.neshan.resturantrest.entity.AuthenticationResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,9 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

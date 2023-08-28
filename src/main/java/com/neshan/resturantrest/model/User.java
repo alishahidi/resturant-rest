@@ -1,4 +1,4 @@
-package com.neshan.resturantrest.models;
+package com.neshan.resturantrest.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor

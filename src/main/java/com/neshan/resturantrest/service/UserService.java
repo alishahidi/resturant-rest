@@ -1,7 +1,7 @@
-package com.neshan.resturantrest.services;
+package com.neshan.resturantrest.service;
 
 import com.github.javafaker.Faker;
-import com.neshan.resturantrest.models.User;
+import com.neshan.resturantrest.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

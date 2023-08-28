@@ -1,15 +1,15 @@
-package com.neshan.resturantrest.controllers;
+package com.neshan.resturantrest.controller;
 
-import com.neshan.resturantrest.entities.AuthenticationResponse;
-import com.neshan.resturantrest.entities.GetUserResponse;
-import com.neshan.resturantrest.models.History;
-import com.neshan.resturantrest.models.Restaurant;
-import com.neshan.resturantrest.models.User;
+import com.neshan.resturantrest.entity.AuthenticationResponse;
+import com.neshan.resturantrest.entity.GetUserResponse;
+import com.neshan.resturantrest.model.History;
+import com.neshan.resturantrest.model.Restaurant;
+import com.neshan.resturantrest.model.User;
 import com.neshan.resturantrest.requests.AuthenticationRequest;
 import com.neshan.resturantrest.requests.RegisterRequest;
-import com.neshan.resturantrest.services.AuthenticationService;
-import com.neshan.resturantrest.services.HistoryService;
-import com.neshan.resturantrest.services.RestaurantService;
+import com.neshan.resturantrest.service.AuthenticationService;
+import com.neshan.resturantrest.service.HistoryService;
+import com.neshan.resturantrest.service.RestaurantService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

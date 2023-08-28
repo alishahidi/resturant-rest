@@ -1,4 +1,4 @@
-package com.neshan.resturantrest.config;
+package com.neshan.resturantrest.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
