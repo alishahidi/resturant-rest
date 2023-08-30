@@ -1,4 +1,4 @@
-package com.neshan.resturantrest.requests;
+package com.neshan.resturantrest.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

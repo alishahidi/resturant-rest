@@ -64,8 +64,9 @@ public class RestaurantService {
     public Restaurant add(Restaurant restaurant) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        restaurant.setUser(userRepository.findById(user.getId())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found.")));
+        restaurant.setUser(user);
+//        restaurant.setUser(userRepository.findById(user.getId()).get());
+
         Restaurant createdRestaurant = restaurantRepository.save(restaurant);
 
         return createdRestaurant;

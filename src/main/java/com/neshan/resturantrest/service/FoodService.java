@@ -41,7 +41,6 @@ public class FoodService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant with id: " + restaurantId + " dont exist.")
         );
-        System.out.println(restaurant.getUser());
         if (!restaurant.getUser().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
