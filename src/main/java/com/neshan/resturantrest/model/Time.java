@@ -16,6 +16,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "times")
+
 public class Time {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
