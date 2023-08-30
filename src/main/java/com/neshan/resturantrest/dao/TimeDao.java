@@ -24,7 +24,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TimeDao {
 
-    private String HASH_KEY = "Product";
+    private String HASH_KEY = "Time";
     RedisTemplate template;
 
     public Time save(Time time) {
