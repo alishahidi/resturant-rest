@@ -30,7 +30,9 @@ public class RestaurantController {
 
     @GetMapping
     @TrackExecutionTime
-    public List<Restaurant> get() {
+    public List<Restaurant> get() throws InterruptedException {
+
+        Thread.sleep(1000);
         return restaurantService.get();
     }
 

@@ -1,7 +1,7 @@
 package com.neshan.resturantrest.config;
 
+import com.neshan.resturantrest.dao.TimeDao;
 import com.neshan.resturantrest.model.Time;
-import com.neshan.resturantrest.service.TimeService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ExecutionTimeAdvice {
 
-    private final TimeService timeService;
+    private final TimeDao timeDao;
 
     @Around("@annotation(com.neshan.resturantrest.config.TrackExecutionTime)")
     public Object executionTime(ProceedingJoinPoint point) throws Throwable {
@@ -28,7 +28,7 @@ public class ExecutionTimeAdvice {
                 .methodName(point.getSignature().getName())
                 .build();
 
-        timeService.add(time);
+        timeDao.save(time);
         return object;
     }
 }

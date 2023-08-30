@@ -1,7 +1,7 @@
 package com.neshan.resturantrest.schedule;
 
+import com.neshan.resturantrest.dao.TimeDao;
 import com.neshan.resturantrest.model.Time;
-import com.neshan.resturantrest.service.TimeService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -16,13 +16,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduledTasks {
 
-    private final TimeService timeService;
+    private final TimeDao timeDao;
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
 
     @Scheduled(cron = "5 * * * * ?")
     public void reportAverageTime() throws InterruptedException {
-        List<Time> times = timeService.get();
+        List<Time> times = timeDao.findAll();
 
         log.info("The average took time is: " +
                 times.stream()
@@ -30,6 +30,8 @@ public class ScheduledTasks {
                         .average()
                         .orElseGet(() -> 0.0)
         );
+
+        timeDao.removeAll();
     }
 
 }

@@ -23,59 +23,59 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 class TimeRepositoryTest {
-
-//    private SessionFactory sessionFactory;
 //
-//    @BeforeEach
-//    void setUp() {
-//        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-//        try {
-//            sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-//        } catch (Exception e) {
-//            StandardServiceRegistryBuilder.destroy(registry);
-//        }
-//    }
+////    private SessionFactory sessionFactory;
+////
+////    @BeforeEach
+////    void setUp() {
+////        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+////        try {
+////            sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+////        } catch (Exception e) {
+////            StandardServiceRegistryBuilder.destroy(registry);
+////        }
+////    }
+////
+////    @AfterEach
+////    void tearDown() {
+////        if (sessionFactory != null) {
+////            sessionFactory.close();
+////        }
+////    }
 //
-//    @AfterEach
-//    void tearDown() {
-//        if (sessionFactory != null) {
-//            sessionFactory.close();
-//        }
-//    }
-
-    @Autowired
-    TimeRepository timeRepository;
-    
-    @Test
-    void save() {
-//        try (Session session = sessionFactory.openSession()) {
-//            session.beginTransaction();
+//    @Autowired
+//    TimeRepository timeRepository;
 //
-//            Time time = Time.builder()
+//    @Test
+//    void save() {
+////        try (Session session = sessionFactory.openSession()) {
+////            session.beginTransaction();
+////
+////            Time time = Time.builder()
+////                    .methodName("test")
+////                    .className("test")
+////                    .totalTime(40L)
+////                    .build();
+////
+////            session.persist(time);
+////
+////            session.getTransaction().commit();
+////        }
+//
+//        Time time = Time.builder()
 //                    .methodName("test")
 //                    .className("test")
 //                    .totalTime(40L)
 //                    .build();
 //
-//            session.persist(time);
+//        timeRepository.save(time);
+//    }
 //
-//            session.getTransaction().commit();
-//        }
-
-        Time time = Time.builder()
-                    .methodName("test")
-                    .className("test")
-                    .totalTime(40L)
-                    .build();
-        
-        timeRepository.save(time);
-    }
-
-    @Test
-    void getByMethodNameAndPrint(){
-        List<Time> times = timeRepository.findByMethodName("get");
-
-        System.out.println("times = " + times);
-    }
-
+//    @Test
+//    void getByMethodNameAndPrint(){
+//        List<Time> times = timeRepository.findByMethodName("get");
+//
+//        System.out.println("times = " + times);
+//    }
+//
 }
