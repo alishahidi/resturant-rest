@@ -1,4 +1,9 @@
 spring:
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+      time-to-live: 40000
   datasource:
     username: postgres
     url: jdbc:postgresql://localhost:5432/restaurant
