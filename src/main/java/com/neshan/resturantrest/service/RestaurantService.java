@@ -2,10 +2,9 @@ package com.neshan.resturantrest.service;
 
 import com.neshan.resturantrest.dto.HistoryDto;
 import com.neshan.resturantrest.dto.RestaurantDto;
-import com.neshan.resturantrest.mapper.HistoryMapper;
+import com.neshan.resturantrest.dto.RestaurantsDto;
 import com.neshan.resturantrest.mapper.RestaurantMapper;
 import com.neshan.resturantrest.model.Food;
-import com.neshan.resturantrest.model.History;
 import com.neshan.resturantrest.model.Restaurant;
 import com.neshan.resturantrest.model.User;
 import com.neshan.resturantrest.repository.FoodRepository;
@@ -14,6 +13,8 @@ import com.neshan.resturantrest.repository.RestaurantRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Sort;
@@ -36,11 +37,14 @@ public class RestaurantService {
     HistoryService historyService;
     RestaurantMapper restaurantMapper;
 
-
-    public List<RestaurantDto> get() throws InterruptedException {
-        return restaurantRepository.findAll(Sort.by("createdAt").descending()).stream().map(restaurantMapper).toList();
+    @Cacheable(value = "restaurants")
+    public RestaurantsDto get() throws InterruptedException {
+        return RestaurantsDto.builder()
+                .restaurants(restaurantRepository.findAll().stream().map(restaurantMapper).toList())
+                .build();
     }
 
+    @CacheEvict(value = "restaurants", key = "#restaurantId")
     public RestaurantDto delete(Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -66,6 +70,7 @@ public class RestaurantService {
         );
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     public RestaurantDto add(Restaurant restaurant) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -74,6 +79,7 @@ public class RestaurantService {
         return restaurantMapper.apply(restaurantRepository.save(restaurant));
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     public HistoryDto serveFood(Long foodId, Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Food food = foodRepository.findById(foodId).orElseThrow(() ->

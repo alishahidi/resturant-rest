@@ -4,6 +4,7 @@ import com.neshan.resturantrest.config.TrackExecutionTime;
 import com.neshan.resturantrest.dto.FoodDto;
 import com.neshan.resturantrest.dto.HistoryDto;
 import com.neshan.resturantrest.dto.RestaurantDto;
+import com.neshan.resturantrest.dto.RestaurantsDto;
 import com.neshan.resturantrest.model.Food;
 import com.neshan.resturantrest.model.Restaurant;
 import com.neshan.resturantrest.service.FoodService;
@@ -11,8 +12,6 @@ import com.neshan.resturantrest.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/restaurant")
@@ -24,8 +23,8 @@ public class RestaurantController {
 
     @GetMapping
     @TrackExecutionTime
-    public List<RestaurantDto> get() throws InterruptedException {
-        return restaurantService.get();
+    public ResponseEntity<RestaurantsDto> get() throws InterruptedException {
+        return ResponseEntity.ok(restaurantService.get());
     }
 
     @GetMapping("/{id}")

@@ -13,6 +13,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,7 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@EnableCaching
 public class FoodService {
 
     FoodRepository foodRepository;
@@ -32,13 +37,14 @@ public class FoodService {
     HistoryRepository historyRepository;
     FoodMapper foodMapper;
 
-
+    @Cacheable(value = "foods", key = "#foodId")
     public FoodDto get(Long foodId) {
         return foodRepository.findById(foodId).map(foodMapper).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
         );
     }
 
+    @CacheEvict(value = {"restaurants", "foods"}, allEntries = true)
     public FoodDto addFood(Food food, Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -53,6 +59,8 @@ public class FoodService {
         return foodMapper.apply(foodRepository.save(food));
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
+    @CachePut(value = "foods", key = "#foodId")
     public FoodDto updateFood(Food food, Long foodId, Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -81,6 +89,7 @@ public class FoodService {
         return foodMapper.apply(foodRepository.save(foundedFood));
     }
 
+    @CacheEvict(value = "restaurants", key = "#foodId")
     public FoodDto deleteFood(Long foodId, Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
