@@ -42,6 +42,7 @@ public class Restaurant {
             name = "restaurant_id",
             referencedColumnName = "id"
     )
+    @JsonIgnore
     List<Food> foods;
 
     @CreationTimestamp

@@ -43,6 +43,7 @@ public class User implements UserDetails {
             name = "user_id",
             referencedColumnName = "id"
     )
+    @JsonIgnore
     List<History> histories;
 
     @OneToMany(
@@ -53,6 +54,7 @@ public class User implements UserDetails {
             name = "user_id",
             referencedColumnName = "id"
     )
+    @JsonIgnore
     List<Restaurant> restaurants;
     @Enumerated(EnumType.STRING)
     private Role role;

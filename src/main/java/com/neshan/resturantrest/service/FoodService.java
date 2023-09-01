@@ -1,5 +1,7 @@
 package com.neshan.resturantrest.service;
 
+import com.neshan.resturantrest.dto.FoodDto;
+import com.neshan.resturantrest.mapper.FoodMapper;
 import com.neshan.resturantrest.model.Food;
 import com.neshan.resturantrest.model.Restaurant;
 import com.neshan.resturantrest.model.User;
@@ -28,14 +30,16 @@ public class FoodService {
     FoodRepository foodRepository;
     RestaurantRepository restaurantRepository;
     HistoryRepository historyRepository;
+    FoodMapper foodMapper;
 
-    public Food get(Long foodId) {
-        return foodRepository.findById(foodId).orElseThrow(() ->
+
+    public FoodDto get(Long foodId) {
+        return foodRepository.findById(foodId).map(foodMapper).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
         );
     }
 
-    public Food addFood(Food food, Long restaurantId) {
+    public FoodDto addFood(Food food, Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->
@@ -46,15 +50,16 @@ public class FoodService {
         }
         food.setRestaurant(restaurant);
 
-        Food createdFoot = foodRepository.save(food);
-
-        return createdFoot;
+        return foodMapper.apply(foodRepository.save(food));
     }
 
-    public Food updateFood(Food food, Long foodId, Long restaurantId) {
+    public FoodDto updateFood(Food food, Long foodId, Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Food foundedFood = get(foodId);
+        Food foundedFood = foodRepository.findById(foodId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
+        );
+
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant with id: " + restaurantId + " dont exist.")
         );
@@ -73,11 +78,10 @@ public class FoodService {
             foundedFood.setName(food.getName());
         }
 
-        foodRepository.save(foundedFood);
-        return foundedFood;
+        return foodMapper.apply(foodRepository.save(foundedFood));
     }
 
-    public Food deleteFood(Long foodId, Long restaurantId) {
+    public FoodDto deleteFood(Long foodId, Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Food food = foodRepository.findById(foodId).orElseThrow(() ->
@@ -95,6 +99,6 @@ public class FoodService {
         historyRepository.deleteHistoriesByFoodId(foodId);
         foodRepository.deleteFoodById(foodId);
 
-        return food;
+        return foodMapper.apply(food);
     }
 }

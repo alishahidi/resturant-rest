@@ -1,5 +1,7 @@
 package com.neshan.resturantrest.service;
 
+import com.neshan.resturantrest.dto.HistoryDto;
+import com.neshan.resturantrest.mapper.HistoryMapper;
 import com.neshan.resturantrest.model.Food;
 import com.neshan.resturantrest.model.History;
 import com.neshan.resturantrest.model.Restaurant;
@@ -28,9 +30,10 @@ public class HistoryService {
     UserRepository userRepository;
     FoodRepository foodRepository;
     RestaurantRepository restaurantRepository;
+    HistoryMapper historyMapper;
 
 
-    public History add(Long userId, Long foodId, Long restaurantId) {
+    public HistoryDto add(Long userId, Long foodId, Long restaurantId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id: " + userId + " dont exist.")
         );
@@ -47,8 +50,6 @@ public class HistoryService {
                 .restaurant(restaurant)
                 .build();
 
-        History createdHistory = historyRepository.save(history);
-
-        return createdHistory;
+        return historyMapper.apply(historyRepository.save(history));
     }
 }

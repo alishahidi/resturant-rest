@@ -1,7 +1,9 @@
 package com.neshan.resturantrest.service;
 
-import com.github.javafaker.Faker;
-import com.neshan.resturantrest.entity.GetRestaurantResponse;
+import com.neshan.resturantrest.dto.HistoryDto;
+import com.neshan.resturantrest.dto.RestaurantDto;
+import com.neshan.resturantrest.mapper.HistoryMapper;
+import com.neshan.resturantrest.mapper.RestaurantMapper;
 import com.neshan.resturantrest.model.Food;
 import com.neshan.resturantrest.model.History;
 import com.neshan.resturantrest.model.Restaurant;
@@ -9,16 +11,15 @@ import com.neshan.resturantrest.model.User;
 import com.neshan.resturantrest.repository.FoodRepository;
 import com.neshan.resturantrest.repository.HistoryRepository;
 import com.neshan.resturantrest.repository.RestaurantRepository;
-import com.neshan.resturantrest.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
@@ -26,19 +27,21 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@EnableCaching
 public class RestaurantService {
 
     RestaurantRepository restaurantRepository;
     FoodRepository foodRepository;
-    UserRepository userRepository;
     HistoryRepository historyRepository;
     HistoryService historyService;
+    RestaurantMapper restaurantMapper;
 
-    public List<Restaurant> get() {
-        return restaurantRepository.findAll(Sort.by("createdAt").descending()); // B => s
+
+    public List<RestaurantDto> get() throws InterruptedException {
+        return restaurantRepository.findAll(Sort.by("createdAt").descending()).stream().map(restaurantMapper).toList();
     }
 
-    public Restaurant delete(Long restaurantId) {
+    public RestaurantDto delete(Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() ->
@@ -52,27 +55,26 @@ public class RestaurantService {
         historyRepository.deleteHistoriesByRestaurantId(restaurantId);
         foodRepository.deleteFoodsByRestaurantId(restaurantId);
         restaurantRepository.deleteRestaurantById(restaurantId);
-        return restaurant;
+
+        return restaurantMapper.apply(restaurant);
     }
 
-    public Restaurant get(Long restaurantId) {
-        return restaurantRepository.findById(restaurantId).orElseThrow(() ->
+    @Cacheable(value = "restaurants", key = "#restaurantId")
+    public RestaurantDto get(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId).map(restaurantMapper).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant with id: " + restaurantId + " dont exist.")
         );
     }
 
-    public Restaurant add(Restaurant restaurant) {
+    public RestaurantDto add(Restaurant restaurant) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         restaurant.setUser(user);
-//        restaurant.setUser(userRepository.findById(user.getId()).get());
 
-        Restaurant createdRestaurant = restaurantRepository.save(restaurant);
-
-        return createdRestaurant;
+        return restaurantMapper.apply(restaurantRepository.save(restaurant));
     }
 
-    public History serveFood(Long foodId, Long restaurantId) {
+    public HistoryDto serveFood(Long foodId, Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Food food = foodRepository.findById(foodId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
@@ -86,10 +88,8 @@ public class RestaurantService {
         }
         food.setQuantity(food.getQuantity() - 1);
 
-        History history = historyService.add(user.getId(), foodId, restaurantId);
-
         foodRepository.save(food);
 
-        return history;
+        return historyService.add(user.getId(), foodId, restaurantId);
     }
 }
