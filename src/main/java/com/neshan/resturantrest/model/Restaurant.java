@@ -1,6 +1,7 @@
 package com.neshan.resturantrest.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.neshan.resturantrest.repository.RestaurantRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -36,11 +37,8 @@ public class Restaurant {
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
-    )
-    @JoinColumn(
-            name = "restaurant_id",
-            referencedColumnName = "id"
+            fetch = FetchType.EAGER,
+            mappedBy = "restaurant"
     )
     @JsonIgnore
     List<Food> foods;

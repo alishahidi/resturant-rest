@@ -10,6 +10,7 @@ import com.neshan.resturantrest.model.User;
 import com.neshan.resturantrest.repository.FoodRepository;
 import com.neshan.resturantrest.repository.HistoryRepository;
 import com.neshan.resturantrest.repository.RestaurantRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,6 +41,7 @@ public class RestaurantService {
     }
 
     @CacheEvict(value = "restaurants", key = "#restaurantId")
+    @Transactional
     public RestaurantDto delete(Long restaurantId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
