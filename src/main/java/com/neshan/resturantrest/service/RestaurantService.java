@@ -14,16 +14,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +31,11 @@ public class RestaurantService {
     FoodRepository foodRepository;
     HistoryRepository historyRepository;
     HistoryService historyService;
-    RestaurantMapper restaurantMapper;
 
     @Cacheable(value = "restaurants")
     public RestaurantsDto get() throws InterruptedException {
         return RestaurantsDto.builder()
-                .restaurants(restaurantRepository.findAll().stream().map(restaurantMapper).toList())
+                .restaurants(restaurantRepository.findAll().stream().map(RestaurantMapper.INSTANCE::restaurantToRestaurantDTO).toList())
                 .build();
     }
 
@@ -60,12 +55,12 @@ public class RestaurantService {
         foodRepository.deleteFoodsByRestaurantId(restaurantId);
         restaurantRepository.deleteRestaurantById(restaurantId);
 
-        return restaurantMapper.apply(restaurant);
+        return RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurant);
     }
 
     @Cacheable(value = "restaurants", key = "#restaurantId")
     public RestaurantDto get(Long restaurantId) {
-        return restaurantRepository.findById(restaurantId).map(restaurantMapper).orElseThrow(() ->
+        return restaurantRepository.findById(restaurantId).map(RestaurantMapper.INSTANCE::restaurantToRestaurantDTO).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant with id: " + restaurantId + " dont exist.")
         );
     }
@@ -76,7 +71,7 @@ public class RestaurantService {
 
         restaurant.setUser(user);
 
-        return restaurantMapper.apply(restaurantRepository.save(restaurant));
+        return RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.save(restaurant));
     }
 
     @CacheEvict(value = "restaurants", allEntries = true)

@@ -2,19 +2,12 @@ package com.neshan.resturantrest.mapper;
 
 import com.neshan.resturantrest.dto.FoodDto;
 import com.neshan.resturantrest.model.Food;
-import org.springframework.stereotype.Service;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-import java.util.function.Function;
+@Mapper
+public interface FoodMapper {
+    FoodMapper INSTANCE = Mappers.getMapper( FoodMapper.class );
 
-@Service
-public class FoodMapper implements Function<Food, FoodDto> {
-    @Override
-    public FoodDto apply(Food food) {
-        return FoodDto.builder()
-                .id(food.getId())
-                .name(food.getName())
-                .quantity(food.getQuantity())
-                .price(food.getPrice())
-                .build();
-    }
+    FoodDto foodToFoodDto(Food food);
 }

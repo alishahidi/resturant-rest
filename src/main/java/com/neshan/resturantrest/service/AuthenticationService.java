@@ -2,6 +2,7 @@ package com.neshan.resturantrest.service;
 
 import com.neshan.resturantrest.dto.UserDto;
 import com.neshan.resturantrest.enums.Role;
+import com.neshan.resturantrest.mapper.AuthenticationMapper;
 import com.neshan.resturantrest.mapper.UserMapper;
 import com.neshan.resturantrest.model.User;
 import com.neshan.resturantrest.repository.UserRepository;
@@ -27,7 +28,6 @@ public class AuthenticationService {
     JwtService jwtService;
     AuthenticationManager authenticationManager;
     UserRepository userRepository;
-    UserMapper userMapper;
 
     public AuthenticationDto register(RegisterRequest request) {
         User user = User
@@ -41,11 +41,7 @@ public class AuthenticationService {
         User createdUser = userRepository.save(user);
         String jwtToken = jwtService.generateToken(user);
 
-        return AuthenticationDto
-                .builder()
-                .token(jwtToken)
-                .user(userMapper.apply(createdUser))
-                .build();
+        return AuthenticationMapper.INSTANCE.authenticationToAuthenticationDto(createdUser, jwtToken);
     }
 
     public AuthenticationDto authenticate(AuthenticationRequest request) {
@@ -59,16 +55,12 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
         String jwtToken = jwtService.generateToken(user);
 
-        return AuthenticationDto
-                .builder()
-                .token(jwtToken)
-                .user(userMapper.apply(user))
-                .build();
+        return AuthenticationMapper.INSTANCE.authenticationToAuthenticationDto(user, jwtToken);
     }
 
     public UserDto get() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return userMapper.apply(user);
+        return UserMapper.INSTANCE.userToUserDTO(user);
     }
 }

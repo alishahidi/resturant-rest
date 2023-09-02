@@ -2,7 +2,6 @@ package com.neshan.resturantrest.service;
 
 import com.neshan.resturantrest.dto.FoodDto;
 import com.neshan.resturantrest.mapper.FoodMapper;
-import com.neshan.resturantrest.mapper.FoodMapperStruct;
 import com.neshan.resturantrest.model.Food;
 import com.neshan.resturantrest.model.Restaurant;
 import com.neshan.resturantrest.model.User;
@@ -23,8 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Setter
@@ -36,11 +33,10 @@ public class FoodService {
     FoodRepository foodRepository;
     RestaurantRepository restaurantRepository;
     HistoryRepository historyRepository;
-    FoodMapper foodMapper;
 
     @Cacheable(value = "foods", key = "#foodId")
     public FoodDto get(Long foodId) {
-        return foodRepository.findById(foodId).map(foodMapper).orElseThrow(() ->
+        return foodRepository.findById(foodId).map(FoodMapper.INSTANCE::foodToFoodDto).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
         );
     }
@@ -57,7 +53,7 @@ public class FoodService {
         }
         food.setRestaurant(restaurant);
 
-        return FoodMapperStruct.INSTANCE.foodToFoodDto(foodRepository.save(food));
+        return FoodMapper.INSTANCE.foodToFoodDto(foodRepository.save(food));
     }
 
     @CacheEvict(value = "restaurants", allEntries = true)
@@ -87,7 +83,7 @@ public class FoodService {
             foundedFood.setName(food.getName());
         }
 
-        return foodMapper.apply(foodRepository.save(foundedFood));
+        return FoodMapper.INSTANCE.foodToFoodDto(foodRepository.save(foundedFood));
     }
 
     @CacheEvict(value = "restaurants", key = "#foodId")
@@ -109,6 +105,6 @@ public class FoodService {
         historyRepository.deleteHistoriesByFoodId(foodId);
         foodRepository.deleteFoodById(foodId);
 
-        return foodMapper.apply(food);
+        return FoodMapper.INSTANCE.foodToFoodDto(food);
     }
 }

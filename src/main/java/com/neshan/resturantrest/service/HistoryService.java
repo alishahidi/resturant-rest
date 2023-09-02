@@ -30,7 +30,6 @@ public class HistoryService {
     UserRepository userRepository;
     FoodRepository foodRepository;
     RestaurantRepository restaurantRepository;
-    HistoryMapper historyMapper;
 
 
     public HistoryDto add(Long userId, Long foodId, Long restaurantId) {
@@ -50,6 +49,6 @@ public class HistoryService {
                 .restaurant(restaurant)
                 .build();
 
-        return historyMapper.apply(historyRepository.save(history));
+        return HistoryMapper.INSTANCE.historyToHistoryDto(historyRepository.save(history));
     }
 }
