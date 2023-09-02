@@ -2,6 +2,7 @@ package com.neshan.resturantrest.service;
 
 import com.neshan.resturantrest.dto.FoodDto;
 import com.neshan.resturantrest.mapper.FoodMapper;
+import com.neshan.resturantrest.mapper.FoodMapperStruct;
 import com.neshan.resturantrest.model.Food;
 import com.neshan.resturantrest.model.Restaurant;
 import com.neshan.resturantrest.model.User;
@@ -56,7 +57,7 @@ public class FoodService {
         }
         food.setRestaurant(restaurant);
 
-        return foodMapper.apply(foodRepository.save(food));
+        return FoodMapperStruct.INSTANCE.foodToFoodDto(foodRepository.save(food));
     }
 
     @CacheEvict(value = "restaurants", allEntries = true)
