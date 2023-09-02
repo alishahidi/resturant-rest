@@ -15,7 +15,7 @@ spring:
         format_sql: 'true'
     hibernate:
       ddl-auto: update
-    show-sql: 'true'
+    show-sql: 'false'
 server:
   error:
     include-message: always

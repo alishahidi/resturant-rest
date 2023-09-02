@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/api/v*/auth/register"),
                                 new AntPathRequestMatcher("/api/v*/auth/login"),
                                 new AntPathRequestMatcher("/api/v*/restaurant"),
-                                new AntPathRequestMatcher("/api/v*/restaurant/*", "GET", false)
+                                new AntPathRequestMatcher("/api/v*/restaurant/*", "GET", false),
+                                new AntPathRequestMatcher("/api/v*/lock/*")
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
