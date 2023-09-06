@@ -103,8 +103,13 @@ public class FoodService {
         }
         historyRepository.deleteHistoriesByFoodId(foodId);
         foodRepository.deleteFoodById(foodId);
+
         RMap<Long, RestaurantDto> restaurantCache = redissonClient.getMap("restaurants");
-        restaurantCache.put(restaurantId, RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.findById(restaurantId).get()));
+        RestaurantDto restaurantDto = restaurantCache.get(restaurantId);
+        if (restaurantDto != null) {
+            restaurantDto.getFoods().removeIf(foodDto -> foodDto.getId().equals(foodId));
+            restaurantCache.put(restaurantId, restaurantDto);
+        }
 
         return FoodMapper.INSTANCE.foodToFoodDto(food);
     }
