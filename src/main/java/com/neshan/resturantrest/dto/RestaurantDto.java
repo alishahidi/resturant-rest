@@ -1,11 +1,10 @@
 package com.neshan.resturantrest.dto;
 
-import com.neshan.resturantrest.model.Food;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 @Builder
@@ -13,12 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RestaurantDto {
     Long id;
     String name;
     String address;
-    List<FoodDto> foods;
+    ArrayList<FoodDto> foods;
     Date createdAt;
     Date updatedAt;
 }
