@@ -1,18 +1,12 @@
 package com.neshan.resturantrest.dao;
 
 import com.neshan.resturantrest.model.Time;
-import com.neshan.resturantrest.request.TimeSearchRequest;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.redisson.api.RMap;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -25,25 +19,24 @@ import java.util.UUID;
 public class TimeDao {
 
     private String HASH_KEY = "Time";
-    RedisTemplate template;
+    RedissonClient redisson;
 
-    public Time save(Time time) {
+    public void save(Time time) {
         String id = UUID.randomUUID().toString();
         time.setId(id);
 
-        template.opsForHash().put(HASH_KEY, id, time);
-
-        return time;
+        RMap<String, Time> map = redisson.getMap(HASH_KEY);
+        map.put(id, time);
     }
 
     public List<Time> findAll() {
-        return template.opsForHash().values(HASH_KEY);
+        RMap<String, Time> map = redisson.getMap(HASH_KEY);
+        return new ArrayList<>(map.values());
     }
 
     public void removeAll() {
-        findAll().stream().forEach(time ->
-                template.opsForHash().delete(HASH_KEY, time.getId())
-        );
+        RMap<String, Time> map = redisson.getMap(HASH_KEY);
+        map.clear();
     }
 
 //    EntityManager em;
