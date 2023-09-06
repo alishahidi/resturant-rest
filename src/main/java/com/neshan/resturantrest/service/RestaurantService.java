@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
@@ -32,6 +33,8 @@ public class RestaurantService {
     FoodRepository foodRepository;
     HistoryRepository historyRepository;
     HistoryService historyService;
+    RabbitTemplate rabbitTemplate;
+//    ObjectMapper objectMapper;
 
     @Cacheable(value = "restaurants")
     public RestaurantsDto get() throws InterruptedException {
@@ -60,20 +63,26 @@ public class RestaurantService {
         return RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurant);
     }
 
-    @Cacheable(value = "restaurants", key = "#restaurantId")
+//    @Cacheable(value = "restaurants", key = "#restaurantId")
     public RestaurantDto get(Long restaurantId) {
-        return restaurantRepository.findById(restaurantId).map(RestaurantMapper.INSTANCE::restaurantToRestaurantDTO).orElseThrow(() ->
+        RestaurantDto restaurantDto = restaurantRepository.findById(restaurantId).map(RestaurantMapper.INSTANCE::restaurantToRestaurantDTO).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant with id: " + restaurantId + " dont exist.")
         );
+        rabbitTemplate.convertAndSend("x.restaurant", "restaurant.get", restaurantDto);
+
+        return restaurantDto;
     }
 
-    @CacheEvict(value = "restaurants", allEntries = true)
+//    @CacheEvict(value = "restaurants", allEntries = true)
     public RestaurantDto add(Restaurant restaurant) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         restaurant.setUser(user);
-
-        return RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.save(restaurant));
+        RestaurantDto restaurantDto = RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.save(restaurant));
+//            Message message = MessageBuilder.withBody(objectMapper.writeValueAsBytes(restaurantDto))
+//                    .setContentType(MessageProperties.CONTENT_TYPE_JSON)
+//                    .build();
+        rabbitTemplate.convertAndSend("x.restaurant", "restaurant.create", restaurantDto);
+        return restaurantDto;
     }
 
     @CacheEvict(value = "restaurants", allEntries = true)
