@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.neshan</groupId>
     <artifactId>resturant-rest</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>4.4.2-SNAPSHOT</version>
     <name>resturant-rest</name>
     <description>resturant-rest</description>
     <properties>
