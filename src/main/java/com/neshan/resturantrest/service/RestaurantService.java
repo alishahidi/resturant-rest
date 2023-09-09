@@ -16,7 +16,6 @@ import lombok.experimental.FieldDefaults;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -94,9 +93,6 @@ public class RestaurantService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         restaurant.setUser(user);
         RestaurantDto restaurantDto = RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.save(restaurant));
-//            Message message = MessageBuilder.withBody(objectMapper.writeValueAsBytes(restaurantDto))
-//                    .setContentType(MessageProperties.CONTENT_TYPE_JSON)
-//                    .build();
         RMap<Long, RestaurantDto> restaurantCache = redissonClient.getMap("restaurants");
         restaurantCache.put(restaurantDto.getId(), restaurantDto);
         rabbitTemplate.convertAndSend("x.restaurant", "restaurant.create", restaurantDto);
