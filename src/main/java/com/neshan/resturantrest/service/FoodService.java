@@ -73,7 +73,7 @@ public class FoodService {
         Food foundedFood = foodRepository.findById(foodId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
         );
-        if (!foundedFood.getRestaurant().getId().equals(restaurantId) || !foundedFood.getRestaurant().getUser().getId().equals(user.getId())) {
+        if (!foodBelongsToRestaurant(food, restaurantId) || !restaurantBelongsToUser(food, user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (food.getPrice() != null) {
@@ -98,7 +98,7 @@ public class FoodService {
         Food food = foodRepository.findById(foodId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
         );
-        if (!food.getRestaurant().getId().equals(restaurantId) || !food.getRestaurant().getUser().getId().equals(user.getId())) {
+        if (!foodBelongsToRestaurant(food, restaurantId) || !restaurantBelongsToUser(food, user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         historyRepository.deleteHistoriesByFoodId(foodId);
@@ -112,5 +112,13 @@ public class FoodService {
         }
 
         return FoodMapper.INSTANCE.foodToFoodDto(food);
+    }
+
+    private boolean foodBelongsToRestaurant(Food food, Long restaurantId){
+        return food.getRestaurant().getId().equals(restaurantId);
+    }
+
+    private boolean restaurantBelongsToUser(Food food, Long userId){
+        return food.getRestaurant().getUser().getId().equals(userId);
     }
 }
