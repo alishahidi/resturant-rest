@@ -73,9 +73,7 @@ public class FoodService {
         Food foundedFood = foodRepository.findById(foodId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
         );
-        if (!foodBelongsToRestaurant(food, restaurantId) || !restaurantBelongsToUser(food, user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        checkAccess(foodBelongsToRestaurant(food, restaurantId), restaurantBelongsToUser(food, user.getId()));
         if (food.getPrice() != null) {
             foundedFood.setPrice(food.getPrice());
         }
@@ -98,9 +96,7 @@ public class FoodService {
         Food food = foodRepository.findById(foodId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
         );
-        if (!foodBelongsToRestaurant(food, restaurantId) || !restaurantBelongsToUser(food, user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        checkAccess(foodBelongsToRestaurant(food, restaurantId), restaurantBelongsToUser(food, user.getId()));
         historyRepository.deleteHistoriesByFoodId(foodId);
         foodRepository.deleteFoodById(foodId);
 
@@ -120,5 +116,11 @@ public class FoodService {
 
     private boolean restaurantBelongsToUser(Food food, Long userId){
         return food.getRestaurant().getUser().getId().equals(userId);
+    }
+
+    private void checkAccess(boolean foodBelongsToRestaurant, boolean restaurantBelongsToUser){
+        if(!foodBelongsToRestaurant || !restaurantBelongsToUser){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
     }
 }
