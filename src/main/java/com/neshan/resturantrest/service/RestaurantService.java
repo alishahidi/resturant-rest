@@ -108,7 +108,7 @@ public class RestaurantService {
         Food food = foodRepository.findById(foodId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "food with id: " + foodId + " dont exist.")
         );
-        if (!food.getRestaurant().getId().equals(restaurantId)) {
+        if (!foodBelongsToRestaurant(food, restaurantId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (food.getQuantity() <= 0) {
@@ -120,5 +120,9 @@ public class RestaurantService {
         restaurantCache.put(restaurantId, RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.findById(restaurantId).get()));
 
         return historyService.add(user.getId(), foodId, restaurantId);
+    }
+
+    private boolean foodBelongsToRestaurant(Food food, Long restaurantId) {
+        return food.getRestaurant().getId().equals(restaurantId);
     }
 }
