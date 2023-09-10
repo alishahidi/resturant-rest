@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.neshan</groupId>
     <artifactId>resturant-rest</artifactId>
-    <version>4.4.2-SNAPSHOT</version>
+    <version>4.5.2-SNAPSHOT</version>
     <name>resturant-rest</name>
     <description>resturant-rest</description>
     <properties>
@@ -99,17 +99,17 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -145,7 +145,6 @@
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>${org.projectlombok.version}</version>
                         </exclude>
                     </excludes>
                 </configuration>

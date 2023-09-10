@@ -1,0 +1,24 @@
+spring:
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+      time-to-live: 40000
+  data:
+    redis:
+      host: localhost
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/restaurant
+    password: 1376gtid
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'false'
+server:
+  error:
+    include-message: always
