@@ -19,23 +19,23 @@ import java.util.UUID;
 public class TimeDao {
 
     private String HASH_KEY = "Time";
-    RedissonClient redisson;
+    RedissonClient redissonClient;
 
     public void save(Time time) {
         String id = UUID.randomUUID().toString();
         time.setId(id);
 
-        RMap<String, Time> map = redisson.getMap(HASH_KEY);
+        RMap<String, Time> map = redissonClient.getMap(HASH_KEY);
         map.put(id, time);
     }
 
     public List<Time> findAll() {
-        RMap<String, Time> map = redisson.getMap(HASH_KEY);
+        RMap<String, Time> map = redissonClient.getMap(HASH_KEY);
         return new ArrayList<>(map.values());
     }
 
     public void removeAll() {
-        RMap<String, Time> map = redisson.getMap(HASH_KEY);
+        RMap<String, Time> map = redissonClient.getMap(HASH_KEY);
         map.clear();
     }
 
