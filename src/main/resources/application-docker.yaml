@@ -1,0 +1,21 @@
+spring:
+  rabbitmq:
+    host: restaurant-rabbit
+  data:
+    redis:
+      host: restaurant-redis
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://restaurant-postgres:5432/restaurant
+    password: 1376gtid
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'false'
+server:
+  error:
+    include-message: always
