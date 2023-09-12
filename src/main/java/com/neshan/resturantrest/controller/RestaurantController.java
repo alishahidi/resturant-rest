@@ -4,9 +4,7 @@ import com.neshan.resturantrest.config.TrackExecutionTime;
 import com.neshan.resturantrest.dto.FoodDto;
 import com.neshan.resturantrest.dto.HistoryDto;
 import com.neshan.resturantrest.dto.RestaurantDto;
-import com.neshan.resturantrest.dto.RestaurantsDto;
 import com.neshan.resturantrest.model.Food;
-import com.neshan.resturantrest.model.Restaurant;
 import com.neshan.resturantrest.service.FoodService;
 import com.neshan.resturantrest.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +27,12 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.get());
     }
 
+    @GetMapping("/get/mashhad")
+    @TrackExecutionTime
+    public ResponseEntity<List<RestaurantDto>> getMashhad() {
+        return ResponseEntity.ok(restaurantService.getMashhad());
+    }
+
     @GetMapping("/{id}")
     @TrackExecutionTime
     public ResponseEntity<RestaurantDto> get(@PathVariable Long id) {
@@ -37,8 +41,8 @@ public class RestaurantController {
 
     @PostMapping("/create")
     @TrackExecutionTime
-    public ResponseEntity<RestaurantDto> create(@RequestBody Restaurant restaurant) {
-        return ResponseEntity.ok(restaurantService.add(restaurant));
+    public ResponseEntity<RestaurantDto> create(@RequestBody RestaurantDto restaurantDto) {
+        return ResponseEntity.ok(restaurantService.add(restaurantDto));
     }
 
     @DeleteMapping("/{id}")

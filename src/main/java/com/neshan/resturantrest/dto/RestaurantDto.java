@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect;
+import org.locationtech.jts.geom.Point;
 
 @Builder
 @AllArgsConstructor
@@ -19,6 +21,9 @@ public class RestaurantDto {
     String name;
     String address;
     ArrayList<FoodDto> foods;
+    Double latitude;
+    Double longitude;
+    Point location;
     Date createdAt;
     Date updatedAt;
 }
