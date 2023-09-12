@@ -104,15 +104,13 @@ public class RestaurantService {
     public RestaurantDto add(RestaurantDto restaurantDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Point p = factory.createPoint(new Coordinate(restaurantDto.getLongitude(), restaurantDto.getLatitude()));
-
         Restaurant restaurant = Restaurant.builder()
-                .location(p)
+                .location(restaurantDto.getLocation())
                 .name(restaurantDto.getName())
                 .address(restaurantDto.getAddress())
                 .user(user)
                 .build();
-        System.out.println(restaurant);
+
         RestaurantDto addedRestaurantDto = RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.save(restaurant));
         RMap<Long, RestaurantDto> restaurantCache = redissonClient.getMap("restaurants");
         restaurantCache.put(addedRestaurantDto.getId(), addedRestaurantDto);

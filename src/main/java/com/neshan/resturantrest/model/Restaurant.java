@@ -1,6 +1,8 @@
 package com.neshan.resturantrest.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.locationtech.jts.geom.Point;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,7 +46,7 @@ public class Restaurant {
     List<Food> foods;
 
     @Column(columnDefinition = "geometry(Point,4326)")
-            @JsonIgnore
+    @JsonIgnore
     Point location;
 
     @CreationTimestamp
