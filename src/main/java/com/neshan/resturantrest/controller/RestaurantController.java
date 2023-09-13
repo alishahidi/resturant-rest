@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/restaurant")
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class RestaurantController {
 
     @GetMapping
     @TrackExecutionTime
-    public ResponseEntity<RestaurantsDto> get() throws InterruptedException {
+    public ResponseEntity<List<RestaurantDto>> get() throws InterruptedException {
         return ResponseEntity.ok(restaurantService.get());
     }
 
