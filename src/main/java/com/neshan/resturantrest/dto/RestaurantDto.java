@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.locationtech.jts.geom.Point;
 
 @Builder
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class RestaurantDto {
     String name;
     String address;
     ArrayList<FoodDto> foods;
+    Point location;
     Date createdAt;
     Date updatedAt;
 }

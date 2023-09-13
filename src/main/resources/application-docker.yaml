@@ -4,9 +4,14 @@ spring:
     redis:
       cache-null-values: true
       time-to-live: 40000
+  rabbitmq:
+    host: restaurant-rabbit
+  data:
+    redis:
+      host: restaurant-redis
   datasource:
     username: postgres
-    url: jdbc:postgresql://localhost:5432/restaurant
+    url: jdbc:postgresql://restaurant-postgres:5432/restaurant
     password: 1376gtid
   jpa:
     properties:

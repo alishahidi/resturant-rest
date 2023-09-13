@@ -1,8 +1,10 @@
 package com.neshan.resturantrest.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.n52.jackson.datatype.jts.JtsModule;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -21,7 +23,9 @@ public class RabbitMQConfig {
 
     @Bean
     public MessageConverter messageConverter() {
-        return new Jackson2JsonMessageConverter();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JtsModule()); // Register the Jackson JTS module
+        return new Jackson2JsonMessageConverter(objectMapper);
     }
 
     @Bean
