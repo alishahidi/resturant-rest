@@ -15,4 +15,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     @Modifying
     @Query("DELETE FROM Restaurant r WHERE r.id = :restaurantId")
     void deleteRestaurantById(Long restaurantId);
+
+    @Query("SELECT r FROM Restaurant r JOIN MashhadArea ma ON ST_Within(r.location, ma.geom)")
+    List<Restaurant> findAllRestaurantsInMashhadArea();
 }

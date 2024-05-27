@@ -3,6 +3,7 @@ package com.neshan.resturantrest.config;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -21,17 +22,19 @@ import java.time.Duration;
 public class RedisConfiguration {
 
     private static final String LOCK_NAME = "lock";
+    @Value("${spring.data.redis.host}")
+    private String redisHost;
 
-    @Bean(destroyMethod = "shutdown")
-    public RedissonClient redisson() {
+    @Bean
+    public RedissonClient redissonClient() {
         Config config = new Config();
         config.useSingleServer()
-                .setAddress("redis://localhost:6379"); // Replace with your Redis server address
+                .setAddress("redis://" + redisHost + ":6379");
 
         return Redisson.create(config);
     }
 
-    @Bean(destroyMethod = "destroy")
+    @Bean
     public RedisLockRegistry redisLockRegistry(RedisConnectionFactory redisConnectionFactory) {
         return new RedisLockRegistry(redisConnectionFactory, LOCK_NAME);
     }

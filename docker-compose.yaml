@@ -1,0 +1,49 @@
+version: latest
+
+services:
+  postgres:
+    container_name: restaurant-postgres
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 1376gtid
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  rabbit:
+    container_name: restaurant-rabbit
+    hostname: 'dev-rabbitmq'
+    image: rabbitmq:3.12-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbit:/var/lib/rabbitmq/mnesia
+  redis:
+    container_name: restaurant-redis
+    image: redis:7.0.13-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis:/data
+  api:
+    container_name: restaurant-api
+    depends_on:
+      - postgres
+      - rabbit
+      - redis
+    build: ./
+    ports:
+      - 8080:8080
+
+volumes:
+  redis:
+    driver: local
+  rabbit:
+    driver: local
+  postgres:
+    driver: local
