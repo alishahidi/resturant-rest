@@ -4,21 +4,21 @@ import com.neshan.resturantrest.dao.TimeDao;
 import com.neshan.resturantrest.model.Time;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+
 
 import java.util.List;
 
 @Component
 @Getter
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE , makeFinal = true)
+@Slf4j
 public class ScheduledTasks {
-
-    private final TimeDao timeDao;
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
-
+     TimeDao timeDao;
 
     @Scheduled(cron = "0 */5 * * * *")
     public void reportAverageTime() throws InterruptedException {
