@@ -16,8 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@RedisHash("Time")
-public class Time implements Serializable {
+public class Time {
     @Id
     String id;
     private String className;

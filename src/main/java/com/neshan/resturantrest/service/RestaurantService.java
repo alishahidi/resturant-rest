@@ -9,6 +9,10 @@ import com.neshan.resturantrest.model.User;
 import com.neshan.resturantrest.repository.FoodRepository;
 import com.neshan.resturantrest.repository.HistoryRepository;
 import com.neshan.resturantrest.repository.RestaurantRepository;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +43,9 @@ public class RestaurantService {
     RabbitTemplate rabbitTemplate;
     RedissonClient redissonClient;
 
+    private GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
+
+
     public List<RestaurantDto> get() throws InterruptedException {
         RMap<Long, RestaurantDto> restaurantCache = redissonClient.getMap("restaurants");
         List<RestaurantDto> restaurantDtoList;
@@ -50,6 +57,11 @@ public class RestaurantService {
                 .collect(Collectors.toMap(RestaurantDto::getId, Function.identity())));
 
         return restaurantDtoList;
+    }
+
+
+    public List<RestaurantDto> getMashhad() {
+        return restaurantRepository.findAllRestaurantsInMashhadArea().stream().map(RestaurantMapper.INSTANCE::restaurantToRestaurantDTO).toList();
     }
 
     @Transactional
@@ -89,14 +101,21 @@ public class RestaurantService {
         return restaurantDto;
     }
 
-    public RestaurantDto add(Restaurant restaurant) {
+    public RestaurantDto add(RestaurantDto restaurantDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        restaurant.setUser(user);
-        RestaurantDto restaurantDto = RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.save(restaurant));
+
+        Restaurant restaurant = Restaurant.builder()
+                .location(restaurantDto.getLocation())
+                .name(restaurantDto.getName())
+                .address(restaurantDto.getAddress())
+                .user(user)
+                .build();
+
+        RestaurantDto addedRestaurantDto = RestaurantMapper.INSTANCE.restaurantToRestaurantDTO(restaurantRepository.save(restaurant));
         RMap<Long, RestaurantDto> restaurantCache = redissonClient.getMap("restaurants");
-        restaurantCache.put(restaurantDto.getId(), restaurantDto);
-        rabbitTemplate.convertAndSend("x.restaurant", "restaurant.create", restaurantDto);
-        return restaurantDto;
+        restaurantCache.put(addedRestaurantDto.getId(), addedRestaurantDto);
+        rabbitTemplate.convertAndSend("x.restaurant", "restaurant.create", addedRestaurantDto);
+        return addedRestaurantDto;
     }
 
     public HistoryDto serveFood(Long foodId, Long restaurantId) {
@@ -121,4 +140,5 @@ public class RestaurantService {
     private boolean foodBelongsToRestaurant(Food food, Long restaurantId) {
         return food.getRestaurant().getId().equals(restaurantId);
     }
+
 }
